@@ -1,4 +1,5 @@
 import DBLocal from 'db-local'
+import crypto from 'crypto'
 
 const { Schema } = new DBLocal({ path: './db' })
 
@@ -21,6 +22,16 @@ export class UserRepository {
     // Asegurarse que le username no existe
     const user = User.findOne({ username })
     if (user) throw new Error('username alredy exist')
+
+    const id = crypto.randomUUID()
+
+    User.create({
+      _id: id,
+      username,
+      password
+    }).save()
+
+    return id
   }
 
   static login ({ username, password }) {}
