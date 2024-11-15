@@ -2,6 +2,8 @@ import express from 'express'
 import { PORT } from './config.js'
 import { UserRepository } from './user-repository.js'
 
+// Colocar el async en los endpoints de register y login
+
 const app = express()
 app.use(express.json())
 
@@ -11,8 +13,16 @@ app.get('/', (req, res) => {
 
 // Endpoints
 app.post('/login', (req, res) => {
-  res.send('Probando Yaak')
+  const { username, password } = req.body
+
+  try {
+    const user = UserRepository.login({ username, password })
+    res.send({ user })
+  } catch (e) {
+    res.status(401).send(e.message)
+  }
 })
+
 app.post('/register', (req, res) => {
   const { username, password } = req.body
 
